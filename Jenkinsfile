@@ -1,12 +1,14 @@
 pipeline {
    agent any 
+    tools {
+        maven 'maven3'
+        jdk 'java21'
+    }
 
 
     stages {
         stage('Compile et tests') {
-            tools {
-                 maven 'maven3'
-            }
+
             steps {
             
             
