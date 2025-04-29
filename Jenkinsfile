@@ -55,7 +55,7 @@ environment{
             
         stage('Déploiement intégration') {
             agent any
-            input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], description: 'Veuillez spécifier le datacenter', name: 'VILLE')]
+            input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], name: 'VILLE')]
             steps {
                 echo "Déploiement intégration"
                 unstash 'Artef'
