@@ -87,8 +87,8 @@ environment{
                    def datacenters = DepoyData['dataCenters']
                    def integrationURL = DeployData['integrationURL']  
                    for (datacenter in dataCenters){
-                    sh 'mkdir -m755 -p /home/plb/${integrationURL}/${datacenter}'
-                    sh 'cp -p application/**/*.jar /home/plb/${integrationURL}/${datacenter}'
+                    sh "mkdir -m755 -p /home/plb/${integrationURL}/${datacenter}"
+                    sh "cp -p application/**/*.jar /home/plb/${integrationURL}/${datacenter}"
                    } 
                 } 
                 
