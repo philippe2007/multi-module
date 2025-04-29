@@ -10,7 +10,6 @@ pipeline {
      }
 environment{
     SONAR_TOKEN = credentials('SONAR_TOKEN')
-
 } 
 
     stages {
@@ -60,34 +59,30 @@ environment{
             }
             
         }
-
-              
-
-
-        stage('Déploiement intégration') {
-            //when {
-            //  branch 'master'
-            //  beforeOptions true
-            //  beforeInput true
-            //  beforeAgent true
-//}
+     
+        stage('Déploiement intégration phase 1') {
             options {
                 timeout(5)
             }
-
-            agent any
+            agent none
             input {
             message 'Voulez vous deployer O/N'
             ok 'OK'
             }
-
+            steps{
+                echo 'essai'
+            }  
+        }
+         
+         stage('Deploiement integration phase 2'){   
+            agent any
             steps {
                 echo "Déploiement intégration "
                 unstash 'Artef'
                 script{
-                   def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
-                   def datac = DeployData["dataCenters"]
-                   def integrationURL = DeployData["integrationURL"]  
+                    def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
+                    def datac = DeployData["dataCenters"]
+                    def integrationURL = DeployData["integrationURL"]  
                    for (DC in datac){
                     sh "mkdir -m755 -p /home/plb/${DC}"
                     sh "cp -p application/**/*.jar /home/plb/${DC}"
@@ -97,6 +92,7 @@ environment{
             }
         }
      }
+ 
 } 
 
 def checkSonarQualityGate(){
