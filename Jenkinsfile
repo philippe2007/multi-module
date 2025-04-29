@@ -51,6 +51,9 @@ environment{
                      steps {
                         echo 'Analyse sonar'
                         sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
+                         script{
+                           checkSonarQualityGate ()
+                        } 
                      }
                     
                 }
@@ -58,17 +61,7 @@ environment{
             
         }
 
-                   stage('Resultat Sonar') {
-                     agent any
-                     steps {
-                        echo 'Resultat Sonar'
-                        script{
-                           checkSonarQualityGate ()
-                        } 
-
-                     }
-                    
-                }
+              
 
 
         stage('Déploiement intégration') {
