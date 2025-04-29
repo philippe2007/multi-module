@@ -67,7 +67,7 @@ environment{
                 echo "Déploiement intégration"
                 unstash 'Artef'
                 sh 'mkdir -m755 -p /home/plb/${VILLE}'
-                sh 'cp -p ${Arte} /home/plb/${VILLE}/${Artef}'
+                sh 'cp -p application/**/*.jar /home/plb/${VILLE}/'
             }
         }
      }
