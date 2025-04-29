@@ -83,8 +83,8 @@ environment{
                 unstash 'Artef'
                 script{
                    def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
-                   def datacenters = DeployData['dataCenters']
-                   def integrationURL = DeployData['integrationURL']  
+                   def datacenters = DeployData["dataCenters"]
+                   def integrationURL = DeployData["integrationURL"]  
                    for (DC in dataCenters){
                     sh "mkdir -m755 -p /home/plb/${integrationURL}/${DC}"
                     sh "cp -p application/**/*.jar /home/plb/${integrationURL}/${DC}"
