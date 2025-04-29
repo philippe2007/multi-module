@@ -1,4 +1,8 @@
 pipeline {
+    options {
+    timeout(time: 1, unit: 'HOURS')
+    buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
+}
    agent none
     tools {
          maven 'maven3'
@@ -60,6 +64,9 @@ environment{
               beforeInput true
               beforeAgent true
 }
+            options {
+                timeout(5)
+            }
 
             agent any
             input {
