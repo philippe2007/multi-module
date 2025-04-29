@@ -57,15 +57,18 @@ environment{
             }
             
         }
-        stage('Resultat Sonar') {
-            agent any
-            steps {
-                echo 'Resultat Sonar'
-                checkSonarQualityGate
-        } 
-        }
 
-  
+                   stage('Resultat Sonar') {
+                     agent any
+                     steps {
+                        echo 'Resultat Sonar'
+                        script{
+                           checkSonarQualityGate 
+                        } 
+
+                     }
+                    
+                }
 
 
         stage('Déploiement intégration') {
