@@ -10,6 +10,7 @@ environment{
 
     stages {
         stage('Compile et tests') {
+            agent any
 
             steps {
             
@@ -19,6 +20,7 @@ environment{
             
         } 
         post {
+            agent any
             always {
             // One or more steps need to be included within each condition's block.
             junit '**/target/surefire-reports/*.xml'
