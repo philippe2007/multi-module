@@ -56,7 +56,9 @@ post {
   }
   failure {
     // One or more steps need to be included within each condition's block.
-    emailext body: 'Merci de vérifier le pipeline dans jenkins file', subject: 'Erreur dans Pipeline', to: 'philippe.sellam@bnpparibas.com'
+    mail bcc: '', body: '''Merci de regarder le pipeline multi module 
+Erreur d\'execution 
+vérifier la log''', cc: '', from: '', replyTo: '', subject: 'Erreur lors buils pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
     }
 }
 
