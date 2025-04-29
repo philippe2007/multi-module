@@ -79,7 +79,7 @@ environment{
 
 
             steps {
-                echo "Déploiement intégration $VILLE"
+                echo "Déploiement intégration "
                 unstash 'Artef'
                 script{
                    def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
