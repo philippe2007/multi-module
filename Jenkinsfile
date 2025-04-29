@@ -1,5 +1,5 @@
 pipeline {
-   agent any 
+   agent none
     tools {
          maven 'maven3'
          jdk 'java21'
@@ -26,6 +26,7 @@ environment{
             success {
             // One or more steps need to be included within each condition's block.
             archiveArtifacts 'application/**/*.jar'
+            stash includes: 'application/**/*.jar', name: 'Artef'
             }
             unsuccessful {
             // One or more steps need to be included within each condition's block.
@@ -36,6 +37,7 @@ environment{
         stage('Analyse qualité et vulnérabilités') {
             parallel {
                 stage('Vulnérabilités') {
+                    agent any
                     steps {
                         echo 'Tests de Vulnérabilités OWASP'
                         sh "mvn -DskipTests verify"
@@ -43,9 +45,10 @@ environment{
                     
                 }
                  stage('Analyse Sonar') {
+                     agent any
                      steps {
                         echo 'Analyse sonar'
-                        sh "mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar"
+                        sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
                      }
                     
                 }
@@ -57,6 +60,10 @@ environment{
 
             steps {
                 echo "Déploiement intégration"
+                input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(VILLE: ['Paris', 'Lille', 'Lyon'], description: 'Veuillez spécifier le datacenter', name: 'Ville')]
+                unstash 'Artef'
+                sh 'mkdir -m755 -p /home/plb/${VILLE}'
+                sh 'cp -p ${Arte} /home/plb/${VILLE}/${Artef}'
 
                 
             }
