@@ -69,12 +69,11 @@ environment{
             }
 
             agent any
-           input {
-  message 'Voulez vous déployer O/N ?'
-  parameters {
-    booleanParam 'Depoy'
-  }
-}
+            input {
+            message 'Voulez vous deployer O/N'
+            ok 'OK'
+            }
+
  
 
 
