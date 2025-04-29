@@ -6,7 +6,7 @@ pipeline {
         stage('Compile et tests') {
             steps {
                 echo 'Commande Maven'
-                mvn -Dmaven.test.failure.ignore=true clean package
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
             }
              
         }
