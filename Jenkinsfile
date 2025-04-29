@@ -55,9 +55,9 @@ environment{
             
         stage('Déploiement intégration') {
             agent any
+            input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(choices: ['Paris', 'Lille', 'Lyon'], description: 'Veuillez spécifier le datacenter', name: 'VILLE')]
             steps {
                 echo "Déploiement intégration"
-                input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(VILLE: ['Paris', 'Lille', 'Lyon'], description: 'Veuillez spécifier le datacenter', name: 'Ville')]
                 unstash 'Artef'
                 sh 'mkdir -m755 -p /home/plb/${VILLE}'
                 sh 'cp -p ${Arte} /home/plb/${VILLE}/${Artef}'
