@@ -58,32 +58,41 @@ environment{
         }
             
         stage('Déploiement intégration') {
-            when {
-              branch 'master'
-              beforeOptions true
-              beforeInput true
-              beforeAgent true
-}
+            //when {
+            //  branch 'master'
+            //  beforeOptions true
+            //  beforeInput true
+            //  beforeAgent true
+//}
             options {
                 timeout(5)
             }
 
             agent any
-            input {
-  message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
+           input {
+  message 'Voulez vous déployer O/N ?'
   parameters {
-    choice choices: ['Paris', 'Lille', 'Lyon'], name: 'VILLE'
+    booleanParam 'Depoy'
   }
 }
+ 
+
 
 
             steps {
                 echo "Déploiement intégration $VILLE"
                 unstash 'Artef'
-                sh 'mkdir -m755 -p /home/plb/${VILLE}'
-                sh 'cp -p application/**/*.jar /home/plb/${VILLE}/'
+                script{
+                   def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
+                   for (i in DepoyData){
+                    sh 'mkdir -m755 -p /home/plb/${DepoyData}'
+                    sh 'cp -p application/**/*.jar /home/plb/${DepoyData}/'
+                   } 
+                } 
+                
             }
         }
      }
-}
+} 
+
 
