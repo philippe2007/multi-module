@@ -63,7 +63,7 @@ environment{
                      steps {
                         echo 'Resultat Sonar'
                         script{
-                           checkSonarQualityGate 
+                           checkSonarQualityGate ()
                         } 
 
                      }
