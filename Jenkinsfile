@@ -58,11 +58,10 @@ environment{
             input {
   message 'Dans quel Data Center, voulez-vous déployer l’artefact ?'
   parameters {
-    text defaultValue: '''Paris
-Lille
-Lyon''', name: 'VILLE'
+    choice choices: ['Paris', 'Lille', 'Lyon'], name: 'VILLE'
   }
 }
+
 
             steps {
                 echo "Déploiement intégration"
