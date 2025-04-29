@@ -1,9 +1,9 @@
 pipeline {
    agent any 
-    tools {
-        maven 'maven3'
-        jdk 'java21'
-    }
+    //tools {
+    //    maven 'maven3'
+    //    jdk 'java21'
+    //}
 
 
     stages {
@@ -58,7 +58,7 @@ post {
     // One or more steps need to be included within each condition's block.
     mail bcc: '', body: '''Merci de regarder le pipeline multi module 
 Erreur d\'execution 
-vérifier la log''', cc: '', from: '', replyTo: '', subject: 'Erreur lors buils pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
+vérifier la log''', cc: '', from: '', replyTo: '', subject: 'Erreur lors build pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
     }
 }
 
