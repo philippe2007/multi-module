@@ -11,13 +11,9 @@ environment{
     stages {
         stage('Compile et tests') {
             agent any
-
             steps {
-            
-            
                 echo 'Commande Maven'
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
-            
         } 
         post {
             agent any
@@ -66,14 +62,8 @@ environment{
                 unstash 'Artef'
                 sh 'mkdir -m755 -p /home/plb/${VILLE}'
                 sh 'cp -p ${Arte} /home/plb/${VILLE}/${Artef}'
-
-                
             }
         }
-
      }
-
-
-
 }
 
