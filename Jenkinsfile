@@ -1,7 +1,7 @@
 pipeline {
    agent any 
     tools {
-    //     maven 'maven3'
+         maven 'maven3'
          jdk 'java21'
      }
 
@@ -25,7 +25,7 @@ pipeline {
             // One or more steps need to be included within each condition's block.
             archiveArtifacts 'application/**/*.jar'
             }
-            failure {
+            unsuccessful {
             // One or more steps need to be included within each condition's block.
              mail bcc: '', body: 'Merci de regarder le pipeline multi module ', cc: '', from: '', replyTo: 'jenkins@plb.com', subject: 'Erreur lors buils pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
              }
