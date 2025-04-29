@@ -15,7 +15,23 @@ pipeline {
                 echo 'Commande Maven'
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
             
-        }     
+        } 
+        post {
+            always {
+            // One or more steps need to be included within each condition's block.
+            junit '**/target/surefire-reports/*.xml'
+             }
+            success {
+            // One or more steps need to be included within each condition's block.
+            archiveArtifacts 'application/**/*.jar'
+            }
+            failure {
+            // One or more steps need to be included within each condition's block.
+            mail bcc: '', body: '''Merci de regarder le pipeline multi module 
+            Erreur d\'execution 
+            vérifier la log''', cc: '', from: '', replyTo: '', subject: 'Erreur lors build pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
+             }
+        }           
         }
         stage('Analyse qualité et vulnérabilités') {
             parallel {
@@ -45,22 +61,7 @@ pipeline {
         }
 
      }
-post {
-  always {
-    // One or more steps need to be included within each condition's block.
-        junit '**/target/surefire-reports/*.xml'
-  }
-  success {
-    // One or more steps need to be included within each condition's block.
-    archiveArtifacts 'application/**/*.jar'
-  }
-  failure {
-    // One or more steps need to be included within each condition's block.
-    mail bcc: '', body: '''Merci de regarder le pipeline multi module 
-Erreur d\'execution 
-vérifier la log''', cc: '', from: '', replyTo: '', subject: 'Erreur lors build pipeline multimodule', to: 'philippe.sellam@bnpparibas.com'
-    }
-}
+
 
 
 }
