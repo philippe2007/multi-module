@@ -59,7 +59,7 @@ environment{
         }
             
         stage('Déploiement intégration') {
-
+            agent any
             steps {
                 echo "Déploiement intégration"
                 input message: 'Dans quel Data Center, voulez-vous déployer l’artefact ?', parameters: [choice(VILLE: ['Paris', 'Lille', 'Lyon'], description: 'Veuillez spécifier le datacenter', name: 'Ville')]
