@@ -16,7 +16,6 @@ environment{
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
         } 
         post {
-            agent any
             always {
             // One or more steps need to be included within each condition's block.
             junit '**/target/surefire-reports/*.xml'
