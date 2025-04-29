@@ -45,6 +45,21 @@ pipeline {
         }
 
      }
-    
+post {
+  always {
+    // One or more steps need to be included within each condition's block.
+        junit '**/target/surefire-reports/*.xml'
+  }
+  success {
+    // One or more steps need to be included within each condition's block.
+    archiveArtifacts 'application/**/*.jar'
+  }
+  failure {
+    // One or more steps need to be included within each condition's block.
+    emailext body: 'Merci de vérifier le pipeline dans jenkins file', subject: 'Erreur dans Pipeline', to: 'philippe.sellam@bnpparibas.com'
+    }
+}
+
+
 }
 
