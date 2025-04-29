@@ -5,7 +5,8 @@ pipeline {
     stages {
         stage('Compile et tests') {
             steps {
-                echo 'Unit test et packaging'
+                echo 'Commande Maven'
+                mvn -Dmaven.test.failure.ignore=true clean package
             }
              
         }
@@ -31,6 +32,7 @@ pipeline {
 
             steps {
                 echo "Déploiement intégration"
+
                 
             }
         }
