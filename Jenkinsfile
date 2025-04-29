@@ -4,7 +4,9 @@ pipeline {
          maven 'maven3'
          jdk 'java21'
      }
-
+environment{
+    SONAR_TOKEN = credentials('SONAR_TOKEN')
+} 
 
     stages {
         stage('Compile et tests') {
@@ -36,12 +38,14 @@ pipeline {
                 stage('Vulnérabilités') {
                     steps {
                         echo 'Tests de Vulnérabilités OWASP'
+                        sh "mvn -DskipTests verify"
                     }
                     
                 }
                  stage('Analyse Sonar') {
                      steps {
                         echo 'Analyse sonar'
+                        sh "mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar"
                      }
                     
                 }
