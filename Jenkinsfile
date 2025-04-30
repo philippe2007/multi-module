@@ -19,7 +19,7 @@ environment{
             steps {
                 echo 'Commande Maven'
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
-                createTarGz sourceDir:'.', extensions:['xml','java'],outputDir:'Archives' 
+                createTarGz sourceDir:'application/src/main', extensions:['xml','java'],outputDir:'Archives' 
                         } 
         post {
             always {
