@@ -29,7 +29,7 @@ environment{
             success {
             // One or more steps need to be included within each condition's block.
             archiveArtifacts 'application/**/*.jar'
-            archiveArtifacts 'appications/**/*.tar.gz'
+            archiveArtifacts 'Archives/**/*.tar.gz'
             stash includes: 'application/**/*.jar', name: 'Artef'
             }
             unsuccessful {
