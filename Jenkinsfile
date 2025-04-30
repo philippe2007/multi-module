@@ -1,4 +1,3 @@
-@Library('GlobalLib') _
 pipeline {
     options {
     timeout(time: 1, unit: 'HOURS')
@@ -6,22 +5,18 @@ pipeline {
 }
    agent none
 
-environment{
-    SONAR_TOKEN = credentials('SONAR_TOKEN')
-} 
-
     stages {
         stage('Compile et tests') {
             agent {
-                docker {
-                image 'openjdk:17-alpine'
-                args '-v $HOME/.m2:/root/.m2'
+                kubernetes {
+                inheritFrom 'jdk17-agent'
             }
 }
             steps {
+                container(name:openjdk-17)
                 echo 'Commande Maven'
                 sh "./mvnw -Dmaven.test.failure.ignore=true clean package"
-                createTarGz sourceDir:'application/src/main/', extensions:['xml','java'],outputDir:'Archives' 
+                //createTarGz sourceDir:'application/src/main/', extensions:['xml','java'],outputDir:'Archives' 
             } 
         post {
             always {
@@ -40,120 +35,6 @@ environment{
              }
         }           
         }
-        stage ('use docker hub'){
-            agent any
-            steps {
-                unstash 'Artef'
-                script{
-                    def dockerImage = docker.build('philippe2007/multi-module','.')
-                    docker.withRegistry('https://registry.hub.docker.com','DockerId') {
-                        dockerImage.push 'latest'
-                        } 
-                } 
-                
-            }    
-        } 
-        stage('Analyse qualité et vulnérabilités') {
-            parallel {
-                stage('Vulnérabilités') {
-                    agent any
-                    tools {
-                      maven 'maven3'
-                      jdk 'java21'
-                    }
-                    steps {
-                        echo 'Tests de Vulnérabilités OWASP'
-                        sh "mvn -DskipTests verify"
-                    }
-                    
-                }
-                 stage('Analyse Sonar') {
-                     agent any
-                     tools {
-                        maven 'maven3'
-                        jdk 'java21'
-                    }
-                     steps {
-                        echo 'Analyse sonar'
-                        sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
-                         script{
-                           checkSonarQualityGate ()
-                        } 
-                     }
-                    
-                }
-            }
-            
-        }
-     
-        stage('Déploiement intégration phase 1') {
-            options {
-                timeout(5)
-            }
-            agent none
-            input {
-            message 'Voulez vous deployer O/N'
-            ok 'OK'
-            }
-            steps{
-                echo 'essai'
-            }  
-        }
-         
-         stage('Deploiement integration phase 2'){   
-            agent any
-            steps {
-                echo "Déploiement intégration "
-                unstash 'Artef'
-                script{
-                    def DeployData = readJSON file: '/home/plb/mywork/multi-module/deployment.json'
-                    def datac = DeployData["dataCenters"]
-                    def integrationURL = DeployData["integrationURL"]  
-                   for (DC in datac){
-                    sh "mkdir -m755 -p /home/plb/${DC}"
-                    sh "cp -p application/**/*.jar /home/plb/${DC}"
-                   } 
-                } 
-                
-            }
-        }
      }
  
 } 
-
-def checkSonarQualityGate(){
-    // Get properties from report file to call SonarQube 
-    def sonarReportProps = readProperties  file: 'target/sonar/report-task.txt'
-    def sonarServerUrl = sonarReportProps['serverUrl']
-    def ceTaskUrl = sonarReportProps['ceTaskUrl']
-    def ceTask
-
-    // Get task informations to get the status
-    timeout(time: 4, unit: 'MINUTES') {
-        waitUntil(initialRecurrencePeriod: 1000)  {
-            withCredentials ([string(credentialsId: 'SONAR_TOKEN', variable : 'token')]) {
-                def response = sh(script: "curl -u ${token}: ${ceTaskUrl}", returnStdout: true).trim()
-                ceTask = readJSON text: response
-            }
-
-            echo ceTask.toString()
-              return "SUCCESS".equals(ceTask['task']['status'])
-        }
-    }
-
-    // Get project analysis informations to check the status
-    def ceTaskAnalysisId = ceTask['task']['analysisId']
-    def qualitygate
-
-    withCredentials ([string(credentialsId: 'SONAR_TOKEN', variable : 'token')]) {
-        def response = sh(script: "curl -u ${token}: ${sonarServerUrl}/api/qualitygates/project_status?analysisId=${ceTaskAnalysisId}", returnStdout: true).trim()
-        qualitygate =  readJSON text: response
-    }
-
-    echo qualitygate.toString()
-    if ("ERROR".equals(qualitygate['projectStatus']['status'])) {
-        error "Quality Gate failure"
-    }
-}
-
-
