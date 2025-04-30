@@ -45,7 +45,7 @@ environment{
             steps {
                 unstash 'Artef'
                 script{
-                    def docker.image = docker.build('philippe2007/multi-module','.')
+                    def dockerImage = docker.build('philippe2007/multi-module','.')
                     docker.withRegistry('https://registry.hub.docker.com','DockerId') {
                         dockerImage.push 'latest'
                         } 
