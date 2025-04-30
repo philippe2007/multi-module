@@ -1,3 +1,4 @@
+@Library('GlobalLib') _
 pipeline {
     options {
     timeout(time: 1, unit: 'HOURS')
@@ -18,7 +19,8 @@ environment{
             steps {
                 echo 'Commande Maven'
                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
-        } 
+                createTarGz sourceDir:'.', extensions:['xml','java'],outputDir:'Archives' 
+                        } 
         post {
             always {
             // One or more steps need to be included within each condition's block.
@@ -27,6 +29,7 @@ environment{
             success {
             // One or more steps need to be included within each condition's block.
             archiveArtifacts 'application/**/*.jar'
+            archiveArtifacts 'appications/**/*.tar.gz'
             stash includes: 'application/**/*.jar', name: 'Artef'
             }
             unsuccessful {
