@@ -40,6 +40,19 @@ environment{
              }
         }           
         }
+        stage ('use docker hub'){
+            agent any
+            steps {
+                unstash 'Artef'
+                script{
+                    def docker.image = docker.build('philippe2007/multi-module','.')
+                    docker.withRegistry('https://registry.hub.docker.com','DockerId') {
+                        dockerImage.push 'latest'
+                        } 
+                } 
+                
+            }    
+        } 
         stage('Analyse qualité et vulnérabilités') {
             parallel {
                 stage('Vulnérabilités') {
