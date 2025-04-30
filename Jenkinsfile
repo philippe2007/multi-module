@@ -13,10 +13,11 @@ pipeline {
             }
 }
             steps {
-                container(name:openjdk-17)
+                container(name:openjdk-17) {  
                 echo 'Commande Maven'
                 sh "./mvnw -Dmaven.test.failure.ignore=true clean package"
                 //createTarGz sourceDir:'application/src/main/', extensions:['xml','java'],outputDir:'Archives' 
+            } 
             } 
         post {
             always {
