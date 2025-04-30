@@ -5,10 +5,7 @@ pipeline {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')
 }
    agent none
-    tools {
-         maven 'maven3'
-         jdk 'java21'
-     }
+
 environment{
     SONAR_TOKEN = credentials('SONAR_TOKEN')
 } 
@@ -47,6 +44,10 @@ environment{
             parallel {
                 stage('Vulnérabilités') {
                     agent any
+                    tools {
+                      maven 'maven3'
+                      jdk 'java21'
+                    }
                     steps {
                         echo 'Tests de Vulnérabilités OWASP'
                         sh "mvn -DskipTests verify"
@@ -55,6 +56,10 @@ environment{
                 }
                  stage('Analyse Sonar') {
                      agent any
+                     tools {
+                        maven 'maven3'
+                        jdk 'java21'
+                    }
                      steps {
                         echo 'Analyse sonar'
                         sh 'mvn -Dsonar.token=${SONAR_TOKEN} clean integration-test sonar:sonar'
